@@ -102,12 +102,14 @@ namespace MIS_ELITE
         {
             LoadDefaults();
             CalculateDues();
+            lblGrossCustomerDue.Text ="Gross Customer Due : " + new InformationRetriever().SingleDataGetter($"SELECT SUM(Due) FROM statementcustomerdue")+"/- tk at " + DateTime.Now.ToString("dd-MMM-yyy");
         }
 
         private void btnReset_Click(object sender, EventArgs e)
         {
             LoadDefaults();
             CalculateDues();
+            lblGrossCustomerDue.Text = "Gross Customer Due : " + new InformationRetriever().SingleDataGetter($"SELECT SUM(Due) FROM statementcustomerdue") + "/- tk at " + DateTime.Now.ToString("dd-MMM-yyy");
         }
 
 
@@ -200,6 +202,7 @@ namespace MIS_ELITE
         private void btnClear_Click(object sender, EventArgs e)
         {
             LoadDefaults();
+            lblGrossCustomerDue.Text = "Gross Customer Due : " + new InformationRetriever().SingleDataGetter($"SELECT SUM(Due) FROM statementcustomerdue") + "/- tk at " + DateTime.Now.ToString("dd-MMM-yyy");
         }
 
         private void btnSearch_Click(object sender, EventArgs e)

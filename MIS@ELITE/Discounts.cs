@@ -66,21 +66,7 @@ namespace MIS_ELITE
             }
         }
 
-        private void LoadDefaults()
-        {
-            try
-            {
-                Defaults();
-                //DatagridView populate
-                new DatabaseConnection().DataGridViewPopulate("SELECT * FROM Discount ORDER BY ID DESC", dgvDiscount);
-                ComboBoxUpdater();
-            }
-            catch (Exception ex)
-            {
-                MessageBox.Show(ex.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
-            }
-        }
-
+    
         private void Discounts_Load(object sender, EventArgs e)
         {
             FastLoadDefaults();
@@ -310,10 +296,12 @@ namespace MIS_ELITE
             {
                 try
                 {
+                    dgvDiscount.SuspendLayout();
                     DatabaseConnection databaseConnection = new DatabaseConnection();
                     string query = $"SELECT * FROM Discount WHERE ClientIdentifier LIKE '%{tbSearch.Text}%' OR Amount LIKE '%{tbSearch.Text}%' OR Date LIKE '%{tbSearch.Text}%' OR MonthName LIKE '%{tbSearch.Text}%' ORDER BY ID DESC";
                     databaseConnection.DataGridViewPopulate(query, dgvDiscount);
                     databaseConnection.CloseConnection();
+                    dgvDiscount.ResumeLayout();
                 }
                 catch (Exception ex)
                 {
@@ -324,7 +312,14 @@ namespace MIS_ELITE
 
         private void checkBox1_CheckedChanged(object sender, EventArgs e)
         {
-
+            if(checkBox1.Checked)
+            {
+                new DatabaseConnection().DataGridViewPopulate("SELECT * FROM Discount ORDER BY ID DESC", dgvDiscount);
+            }
+            else
+            {
+                new DatabaseConnection().DataGridViewPopulate("SELECT * FROM Discount ORDER BY ID DESC LIMIT 50", dgvDiscount);
+            }
         }
     }
 }

@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Windows.Forms;
+using static System.Windows.Forms.VisualStyles.VisualStyleElement.Button;
 
 namespace MIS_ELITE
 {
@@ -84,7 +85,6 @@ namespace MIS_ELITE
                 Defaults();
                 //Datagridview populate
                 new DatabaseConnection().DataGridViewPopulate("SELECT * from Expense ORDER BY ID DESC LIMIT 50", dgvExpense);
-
                 ComboBoxUpdater();
             }
             catch (Exception ex)
@@ -131,7 +131,7 @@ namespace MIS_ELITE
 
         private void btnClear_Click(object sender, EventArgs e)
         {
-            LoadDefaults();
+            FastLoadDefaults();
             RbBangladesh.PerformClick();
         }
 
@@ -192,7 +192,7 @@ namespace MIS_ELITE
                         $"'{cbKeyword.Text}','{tbMonthName.Text}','{tbNotes.Text}','{foreignExpense}')";
                     db.Execute(query, true);
                     db.CloseConnection();
-                    LoadDefaults();
+                    FastLoadDefaults();
                 }
             }
             catch (Exception ex)
@@ -276,7 +276,7 @@ namespace MIS_ELITE
                         $"WHERE ID='{tbTxnId.Text}'";
                     db.Execute(query, true);
                     db.CloseConnection();
-                    LoadDefaults();
+                    FastLoadDefaults();
                 }
             }
             catch (Exception ex)
@@ -300,7 +300,7 @@ namespace MIS_ELITE
                     string query = $"DELETE FROM Expense WHERE ID='{tbTxnId.Text}'";
                     db.Execute(query, true);
                     db.CloseConnection();
-                    LoadDefaults();
+                    FastLoadDefaults();
                 }
             }
             catch (Exception ex)
@@ -319,21 +319,6 @@ namespace MIS_ELITE
                 db.CloseConnection();
                 string expenseTotal = new InformationRetriever().SingleDataGetter($"SELECT SUM(Amount) FROM Expense WHERE MonthName='{cbMonthNameFilter.Text}'");
                 lblAnalytics.Text = $"Total Expense for {cbMonthNameFilter.Text}: {expenseTotal}/-";
-            }
-            catch (Exception ex)
-            {
-                MessageBox.Show(ex.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
-            }
-        }
-
-        private void tbSearch_TextChanged(object sender, EventArgs e)
-        {
-            try
-            {
-                DatabaseConnection db = new DatabaseConnection();
-                string query = $"SELECT * from Expense where Details like '%{tbSearch.Text}%' OR Amount like '%{tbSearch.Text}%' OR Date like '%{tbSearch.Text}%' OR FromAccount like '%{tbSearch.Text}%' or Keyword like '%{tbSearch.Text}%' OR MonthName like '%{tbSearch.Text}%'  ORDER BY ID DESC";
-                db.DataGridViewPopulate(query, dgvExpense);
-                db.CloseConnection();
             }
             catch (Exception ex)
             {
@@ -403,6 +388,36 @@ namespace MIS_ELITE
             catch (Exception ex)
             {
                 MessageBox.Show(ex.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
+        }
+
+        private void tbSearch_KeyDown(object sender, KeyEventArgs e)
+        {
+            if (e.KeyCode == Keys.Enter)
+            {
+                try
+                {
+                    DatabaseConnection db = new DatabaseConnection();
+                    string query = $"SELECT * from Expense where Details like '%{tbSearch.Text}%' OR Amount like '%{tbSearch.Text}%' OR Date like '%{tbSearch.Text}%' OR FromAccount like '%{tbSearch.Text}%' or Keyword like '%{tbSearch.Text}%' OR MonthName like '%{tbSearch.Text}%'  ORDER BY ID DESC";
+                    db.DataGridViewPopulate(query, dgvExpense);
+                    db.CloseConnection();
+                }
+                catch (Exception ex)
+                {
+                    MessageBox.Show(ex.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                }
+            }
+        }
+
+        private void chkbxLoadAll_CheckedChanged(object sender, EventArgs e)
+        {
+            if (chkbxLoadAll.Checked)
+            {
+                new DatabaseConnection().DataGridViewPopulate("SELECT * FROM Expense ORDER BY ID DESC", dgvExpense);
+            }
+            else
+            {
+                new DatabaseConnection().DataGridViewPopulate("SELECT * FROM Expense ORDER BY ID DESC LIMIT 50", dgvExpense);
             }
         }
     }
