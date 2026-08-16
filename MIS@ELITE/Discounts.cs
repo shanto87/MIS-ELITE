@@ -105,7 +105,7 @@ namespace MIS_ELITE
 
         private void btnClear_Click(object sender, EventArgs e)
         {
-            LoadDefaults();
+            FastLoadDefaults();
         }
 
         private bool IsValid()
@@ -150,7 +150,7 @@ namespace MIS_ELITE
                         $"'{dtpDate.Text}', '{tbMonthName.Text}', '{tbNotes.Text}','')";
                     db.Execute(query, true);
                     db.CloseConnection();
-                    LoadDefaults();
+                    FastLoadDefaults();
                     new CustomerDue().CalculateDues();
                 }
             }
@@ -181,7 +181,7 @@ namespace MIS_ELITE
                         $"Date='{dtpDate.Text}', MonthName='{tbMonthName.Text}', Notes='{tbNotes.Text}' WHERE ID={tbTxnId.Text}";
                     db.Execute(query, true);
                     db.CloseConnection();
-                    LoadDefaults();
+                    FastLoadDefaults();
                     CustomerDue customerDue = new CustomerDue();
                     customerDue.CalculateDues();
                 }
@@ -253,7 +253,7 @@ namespace MIS_ELITE
                     string query = $"DELETE FROM Discount WHERE ID={tbTxnId.Text}";
                     db.Execute(query, true);
                     db.CloseConnection();
-                    LoadDefaults();
+                    FastLoadDefaults();
                     CustomerDue customerDue = new CustomerDue();
                     customerDue.CalculateDues();
                 }
@@ -320,6 +320,11 @@ namespace MIS_ELITE
                     MessageBox.Show(ex.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 }
             }
+        }
+
+        private void checkBox1_CheckedChanged(object sender, EventArgs e)
+        {
+
         }
     }
 }
